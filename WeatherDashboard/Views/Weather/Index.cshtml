@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "查詢天氣";
+}
+
+<h1>查詢天氣</h1>
+
+<p>ViewBag.Message</p>
+
+
+<form id="weatherForm">
+    <div>
+        <label for="countrySelect">選擇國家：</label>
+        <select id="countrySelect" name="countryCode">
+            <option value="">請選擇國家</option>
+            @foreach (var country in ViewBag.Countries)
+            {
+                <option value="@country.CountryCode">
+                    @country.CountryNameZhTw
+                </option>
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="citySelect">選擇城市：</label>
+        <select id="citySelect" name="cityId">
+            <option value="">請選擇城市</option>
+        </select>
+    </div>
+
+    <input type="submit" value="查詢" />
+</form>
+
+
+<div id="weatherResult" style="margin-top:20px;">
+    <!-- 這裡放查詢出來的天氣狀況 -->
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+            $('#countrySelect').change(function () {
+                var countryCode = $(this).val();
+                loadCities(countryCode);
+            });
+
+            function loadCities(countryCode) {
+                if (countryCode) {
+                    $('#citySelect').prop('disabled', false);
+                    $('#citySelect').empty().append($('<option>', {
+                        value: '',
+                        text: '請選擇城市'
+                    }));
+                    $.getJSON('@Url.Action("GetCities", "Weather")', { countryCode: countryCode }, function (data) {
+                        $.each(data, function (index, city) {
+                            $('#citySelect').append($('<option>', {
+                                value: city.cityId,
+                                text: city.cityNameZhTw
+                            }));
+                        });
+                    });
+                } else {
+                    $('#citySelect').prop('disabled', true);
+                    $('#citySelect').empty().append($('<option>', {
+                        value: '',
+                        text: '請選擇城市'
+                    }));
+                }
+            }
+
+            
+            $('#weatherForm').submit(function (event) {
+                event.preventDefault(); 
+
+                var countryCode = $('#countrySelect').val();
+                var cityId = $('#citySelect').val();
+
+                if (!countryCode) {
+                    alert('請選擇國家。');
+                    return;
+                }
+
+                if (!cityId) {
+                    alert('請選擇城市。');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetWeather", "Weather")',
+                    data: {
+                        countryCode: countryCode,
+                        cityId: cityId
+                    },
+                    success: function (response) {
+                        console.log(response.temperature.val)
+                        if (response.success) {
+                            $('#weatherResult').html(
+                                '<h2>' + response.cityName + ' 的天氣狀況</h2>' +
+                                '<p>溫度：' + response.temperature + '°C</p>' +
+                                '<p>天氣：' + response.description + '</p>' +
+                                '<p>濕度：' + response.humidity + '%</p>' +
+                                '<p>風速：' + response.windSpeed + ' m/s</p>'
+                            );
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('查詢失敗。');
+                    }
+                });
+            });
+        });
+    </script>
+}

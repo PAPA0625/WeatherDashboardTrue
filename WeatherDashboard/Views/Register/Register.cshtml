@@ -1,0 +1,51 @@
+﻿@page
+
+<h1>註冊</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" method="post" action="/Register/NewUserRegister">
+            <h2>加入我們成為會員</h2>
+            <hr />
+            <div id="validation-summary" class="text-danger" role="alert"></div>
+
+            <!-- 暱稱 -->
+            <div class="form-floating mb-3">
+                <input type="text" name="nickname" id="nickname" class="form-control" aria-required="true" placeholder="暱稱" />
+                <label for="nickname">暱稱</label>
+            </div>
+
+            <!-- 電子信箱 -->
+            <div class="form-floating mb-3">
+                <input type="email" name="email" id="email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                <label for="email">電子信箱</label>
+            </div>
+
+            <!-- 密碼 -->
+            <div class="form-floating mb-3">
+                <input type="password" name="password" id="password" class="form-control" aria-required="true" placeholder="密碼" />
+                <label for="password">密碼</label>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">註冊</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 當表單提交時進行簡單檢查
+        document.getElementById("registerForm").addEventListener("submit", function (event) {
+            // 獲取輸入框的值
+            var nickname = document.getElementById("nickname").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            // 檢查是否所有欄位都有輸入
+            if (!nickname || !email || !password) {
+                event.preventDefault(); // 阻止表單提交
+                document.getElementById("validation-summary").innerText = "所有欄位都是必填的";
+            }
+        });
+    </script>
+}
