@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "FavoriteCity";
+}
+
+<h1>FavoriteCity</h1>
+
+<div id="weatherResult" style="margin-top:20px;">
+    <!-- 這裡放查詢出來的天氣狀況 -->
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/weatherHub")
+            .build();
+
+        connection.on("ReceiveWeatherUpdate", function (response) {
+            // 使用新的天氣資訊更新 UI
+            $('#weatherResult').html(
+                '<h2>' + response.cityName + ' 的天氣狀況</h2>' +
+                '<p>溫度：' + response.temperature + '°C</p>' +
+                '<p>天氣：' + response.description + '</p>' +
+                '<p>濕度：' + response.humidity + '%</p>' +
+                '<p>風速：' + response.windSpeed + ' m/s</p>'
+            );
+        });
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+    </script>
+}

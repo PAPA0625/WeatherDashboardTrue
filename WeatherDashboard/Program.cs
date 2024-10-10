@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WeatherDashboard.Data;
+using WeatherDashboard.Hubs;
 using WeatherDashboard.Repositories;
 using WeatherDashboard.Services;
 
@@ -17,13 +18,18 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 
-#region �̿�`�J
+#region 註冊依賴項
 builder.Services.AddSingleton<WeatherService>();
 builder.Services.AddScoped<CountryService>();
 builder.Services.AddScoped<CityService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRepository>();
 #endregion
+
+builder.Services.AddSignalR();
+builder.Services.AddHttpClient(); // 確保 HttpClient 已註冊
+builder.Services.AddHostedService<WeatherUpdateService>();// 註冊背景服務 這樣才會自動運行
+
 
 var app = builder.Build();
 
@@ -51,5 +57,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Weather}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+app.UseEndpoints(endpoints =>
+{
+    _ = endpoints.MapHub<WeatherHub>("/weatherHub");
+});
 
 app.Run();

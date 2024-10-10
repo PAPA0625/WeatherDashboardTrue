@@ -33,6 +33,11 @@ namespace WeatherDashboard.Controllers
             return View();
         }
 
+        public IActionResult FavoriteCity()
+        {
+            return View();
+        }
+
         [HttpGet]
         public JsonResult GetCities(string countryCode)
         {
