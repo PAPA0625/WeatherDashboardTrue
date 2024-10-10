@@ -43,8 +43,8 @@ namespace WeatherDashboard.Controllers
             _userService.NewRegister(user);
 
             // 註冊成功後重定向到其他頁面
-            var identityUser = new IdentityUser { UserName = email, Email = email };
-            await _signInManager.SignInAsync(identityUser, isPersistent: false);
+            //var identityUser = new IdentityUser { UserName = email, Email = email };
+            //await _signInManager.SignInAsync(identityUser, isPersistent: false);
             return RedirectToAction("Index", "Weather");
         }
     }
