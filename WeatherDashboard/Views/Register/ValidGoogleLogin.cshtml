@@ -1,4 +1,8 @@
-﻿@page
+﻿@model WeatherDashboard.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "ValidGoogleLogin";
+}
 
 <h1>註冊</h1>
 
@@ -11,13 +15,13 @@
 
             <!-- 暱稱 -->
             <div class="form-floating mb-3">
-                <input type="text" name="nickname" id="nickname" class="form-control" aria-required="true" placeholder="暱稱" />
+                <input type="text" name="nickname" id="nickname" class="form-control" aria-required="true" placeholder="暱稱" value="@Model.Nickname"/>
                 <label for="nickname">暱稱</label>
             </div>
 
             <!-- 電子信箱 -->
             <div class="form-floating mb-3">
-                <input type="email" name="email" id="email" class="form-control" aria-required="true" placeholder="name@example.com" />
+                <input type="email" name="email" id="email" class="form-control" aria-required="true" placeholder="name@example.com" value="@Model.Email" />
                 <label for="email">電子信箱</label>
             </div>
 
@@ -29,20 +33,6 @@
 
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">註冊</button>
         </form>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-        <div id="g_id_onload"
-             data-client_id="xxxxxxxxxxxx.apps.googleusercontent.com"
-             data-login_uri="https://localhost:7172/Register/ValidGoogleLogin"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-             data-type="standard"
-             data-size="large"
-             data-theme="outline"
-             data-text="sign_in_with"
-             data-shape="rectangular"
-             data-logo_alignment="left">
-        </div>
     </div>
 </div>
 
